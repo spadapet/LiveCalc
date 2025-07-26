@@ -1,4 +1,4 @@
-﻿namespace LiveCalcCore
+﻿namespace CalcCore
 {
     public enum Command
     {

@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace LiveCalcCore
+namespace CalcCore
 {
     public partial class CalcModel : ObservableObject
     {

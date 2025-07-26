@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36310.24 d17.14
+VisualStudioVersion = 17.14.36310.24
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveCalcCore", "LiveCalcCore\LiveCalcCore.csproj", "{2BC713B8-B459-4C06-85EA-1DEB5E461073}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalcCore", "LiveCalcCore\CalcCore.csproj", "{2BC713B8-B459-4C06-85EA-1DEB5E461073}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalcWpf", "LiveCalcWpf\CalcWpf.csproj", "{88E1A7CD-8A16-4113-A28C-5EE338AF1E04}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalcWinForms", "LiveCalcWinForms\CalcWinForms.csproj", "{849F1513-1D27-4A73-B0A9-43080B4DF842}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{2BC713B8-B459-4C06-85EA-1DEB5E461073}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BC713B8-B459-4C06-85EA-1DEB5E461073}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BC713B8-B459-4C06-85EA-1DEB5E461073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88E1A7CD-8A16-4113-A28C-5EE338AF1E04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88E1A7CD-8A16-4113-A28C-5EE338AF1E04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88E1A7CD-8A16-4113-A28C-5EE338AF1E04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88E1A7CD-8A16-4113-A28C-5EE338AF1E04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{849F1513-1D27-4A73-B0A9-43080B4DF842}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{849F1513-1D27-4A73-B0A9-43080B4DF842}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{849F1513-1D27-4A73-B0A9-43080B4DF842}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{849F1513-1D27-4A73-B0A9-43080B4DF842}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
