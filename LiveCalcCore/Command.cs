@@ -1,47 +1,46 @@
-﻿namespace CalcCore
+﻿namespace CalcCore;
+
+public enum Command
 {
-    public enum Command
-    {
-        None,
+    None,
 
-        // Typing
-        Type0,
-        Type1,
-        Type2,
-        Type3,
-        Type4,
-        Type5,
-        Type6,
-        Type7,
-        Type8,
-        Type9,
-        DecimalPoint,
-        Backspace,
-        ClearAll,
-        ClearEntry,
+    // Typing
+    Type0,
+    Type1,
+    Type2,
+    Type3,
+    Type4,
+    Type5,
+    Type6,
+    Type7,
+    Type8,
+    Type9,
+    DecimalPoint,
+    Backspace,
+    ClearAll,
+    ClearEntry,
 
-        // Binary operations
-        Plus,
-        Minus,
-        Multiply,
-        Divide,
+    // Binary operations
+    Plus,
+    Minus,
+    Multiply,
+    Divide,
 
-        // Unary operations
-        Equal,
-        PlusMinus,
-        Percent,
-        SquareRoot,
-        Square,
-        Inverse,
+    // Unary operations
+    Equal,
+    PlusMinus,
+    Percent,
+    SquareRoot,
+    Square,
+    Inverse,
 
-        // Constants
-        ConstantPi,
+    // Constants
+    ConstantPi,
 
-        // Memory operations
-        MemoryClear,
-        MemoryRecall,
-        MemoryAdd,
-        MemorySubtract,
-        MemoryStore,
-    }
+    // Memory operations
+    MemoryClear,
+    MemoryRecall,
+    MemoryAdd,
+    MemorySubtract,
+    MemoryStore,
 }
