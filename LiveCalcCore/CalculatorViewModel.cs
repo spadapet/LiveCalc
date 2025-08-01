@@ -1,12 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
 using System.ComponentModel;
 
 namespace CalcCore;
 
-public partial class CalculatorViewModel : ObservableObject, 
-    IDisposable
+public record PropertyCascadeMessage(object Source, string PropertyName, object? NewValue);
+
+public partial class CalculatorViewModel : ObservableObject
 {
     private readonly Value _currentValue = new();
     private readonly Value _memoryValue = new();
@@ -19,13 +19,6 @@ public partial class CalculatorViewModel : ObservableObject,
         _currentValue.PropertyChanged += OnValuePropertyChanged;
         _memoryValue.PropertyChanged += OnValuePropertyChanged;
         _pushedValue.PropertyChanged += OnValuePropertyChanged;
-    }
-
-    public void Dispose()
-    {
-        _currentValue.PropertyChanged -= OnValuePropertyChanged;
-        _memoryValue.PropertyChanged -= OnValuePropertyChanged;
-        _pushedValue.PropertyChanged -= OnValuePropertyChanged;
     }
 
     public string Display
@@ -52,9 +45,8 @@ public partial class CalculatorViewModel : ObservableObject,
         set => _memoryValue.Number = value;
     }
 
-    public string Formula => ValueHelpers.ToString(
-        _pushedValue, 
-        _pushedCommand);
+    public string Formula 
+        => _pushedCommand.ToString(_pushedValue);
 
     [RelayCommand]
     private void Execute(CalculatorCommand command)
@@ -115,14 +107,14 @@ public partial class CalculatorViewModel : ObservableObject,
 
             case CalculatorCommand.ClearAll:
             case CalculatorCommand.ClearEntry:
-                if (command == CalculatorCommand.ClearAll || Display == ValueHelpers.DefaultDisplay)
+                if (command == CalculatorCommand.ClearAll || Display == ValueExtensions.DefaultDisplay)
                 {
-                    _pushedValue.Display = ValueHelpers.DefaultDisplay;
+                    _pushedValue.Display = ValueExtensions.DefaultDisplay;
                     _pushedCommand = CalculatorCommand.None;
                     OnPropertyChanged(nameof(Formula));
                 }
                 
-                Display = ValueHelpers.DefaultDisplay;
+                Display = ValueExtensions.DefaultDisplay;
                 break;
 
             case CalculatorCommand.Plus:
@@ -132,17 +124,19 @@ public partial class CalculatorViewModel : ObservableObject,
                 _pushedValue.Display = _currentValue.Display;
                 _pushedCommand = command;
                 OnPropertyChanged(nameof(Formula));
-                Display = ValueHelpers.DefaultDisplay;
+                Display = ValueExtensions.DefaultDisplay;
+
                 break;
 
             case CalculatorCommand.Equal:
-                if (ValueHelpers.Compute(_pushedValue, _pushedCommand, _currentValue) is Value result)
+                if (_pushedCommand.Compute(_pushedValue, _currentValue) is Value result)
                 {
-                    _pushedValue.Display = ValueHelpers.DefaultDisplay;
+                    _pushedValue.Display = ValueExtensions.DefaultDisplay;
                     _pushedCommand = CalculatorCommand.None;
                     OnPropertyChanged(nameof(Formula));
                     Display = result.Display;
                 }
+
                 break;
 
             case CalculatorCommand.PlusMinus:
@@ -179,7 +173,7 @@ public partial class CalculatorViewModel : ObservableObject,
                 break;
 
             case CalculatorCommand.MemoryClear:
-                MemoryDisplay = ValueHelpers.DefaultDisplay;
+                MemoryDisplay = ValueExtensions.DefaultDisplay;
                 break;
 
             case CalculatorCommand.MemoryRecall:
@@ -200,7 +194,7 @@ public partial class CalculatorViewModel : ObservableObject,
         }
     }
 
-    private void OnValuePropertyChanged(object sender, PropertyChangedEventArgs args)
+    private void OnValuePropertyChanged(object? sender, PropertyChangedEventArgs args)
     {
         if (sender == _currentValue)
         {

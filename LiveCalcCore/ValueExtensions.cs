@@ -1,30 +1,23 @@
-﻿using System.Globalization;
-using System.Text;
+﻿using System.Text;
 
 namespace CalcCore;
 
-internal static class ValueHelpers
+/// <summary>
+///  Provides extension methods for value formatting, command string conversion, and calculation logic.
+/// </summary>
+internal static class ValueExtensions
 {
+    /// <summary>
+    ///  The default display value for numbers.
+    /// </summary>
     public const string DefaultDisplay = "0";
 
-    public static decimal ToNumber(string value)
-    {
-        if (decimal.TryParse(
-            value, 
-            NumberStyles.Number, 
-            CultureInfo.InvariantCulture, 
-            out decimal result))
-        {
-            return result;
-        }
-
-        return 0m;
-    }
-
     /// <summary>
-    ///  Always returns a valid string representation of a number, given any number-like input.
+    ///  Returns a valid string representation of a number from any input, ensuring proper formatting.
     /// </summary>
-    public static string FixStringInput(string value)
+    /// <param name="value">The input string to fix.</param>
+    /// <returns>A valid number string.</returns>
+    public static string FixStringInput(this string value)
     {
         value = value?.Trim() ?? string.Empty;
         StringBuilder sb = new(value.Length);
@@ -93,23 +86,30 @@ internal static class ValueHelpers
         return value;
     }
 
-    public static string ToString(decimal value)
-        => value.ToString(CultureInfo.InvariantCulture);
-
-    public static string ToString(Value value, CalculatorCommand command) 
-        => command switch
-    {
-        CalculatorCommand.Plus => $"{value} +",
-        CalculatorCommand.Minus => $"{value} -",
-        CalculatorCommand.Multiply => $"{value} ×",
-        CalculatorCommand.Divide => $"{value} ÷",
-        _ => string.Empty
-    };
+    /// <summary>
+    ///  Converts a calculator command and value to a string representation.
+    /// </summary>
+    /// <param name="command">The calculator command.</param>
+    /// <param name="value">The value to display.</param>
+    /// <returns>A string representing the command and value.</returns>
+    public static string ToString(this CalculatorCommand command, Value value)
+         => command switch
+         {
+             CalculatorCommand.Plus => $"{value} +",
+             CalculatorCommand.Minus => $"{value} -",
+             CalculatorCommand.Multiply => $"{value} ×",
+             CalculatorCommand.Divide => $"{value} ÷",
+             _ => string.Empty
+         };
 
     /// <summary>
-    ///  Returns null if the operation cannot be computed (e.g., divide by zero).
+    ///  Computes the result of a binary calculator command on two values, or returns null if invalid.
     /// </summary>
-    public static Value Compute(Value left, CalculatorCommand command, Value right)
+    /// <param name="command">The calculator command.</param>
+    /// <param name="left">The left operand.</param>
+    /// <param name="right">The right operand.</param>
+    /// <returns>The computed value, or null if the operation is invalid.</returns>
+    public static Value? Compute(this CalculatorCommand command, Value left, Value right)
     {
         try
         {
