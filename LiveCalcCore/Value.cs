@@ -6,9 +6,10 @@ namespace CalcCore;
 /// <summary>
 /// Store all values as strings, to allow for arbitrary precision and formatting.
 /// </summary>
-public class Value : ObservableObject, IEquatable<Value>, ICloneable
+public class Value : ObservableObject, 
+    IEquatable<Value>, ICloneable
 {
-    private string display;
+    private string _display;
 
     public Value()
         : this(ValueHelpers.DefaultDisplay)
@@ -16,39 +17,49 @@ public class Value : ObservableObject, IEquatable<Value>, ICloneable
 
     public Value(string value)
     {
-        this.display = ValueHelpers.FixStringInput(value);
+        _display = ValueHelpers.FixStringInput(value);
     }
 
     public Value(decimal number)
     {
-        this.display = ValueHelpers.ToString(number);
+        _display = ValueHelpers.ToString(number);
     }
 
-    object ICloneable.Clone() => this.Clone();
-    public Value Clone() => new(this.Display);
-    public bool Equals(Value other) => other != null && this.Display == other.Display;
-    public override bool Equals(object obj) => obj is Value other && this.Equals(other);
-    public override int GetHashCode() => this.Display.GetHashCode();
-    public override string ToString() => this.Display;
+    object ICloneable.Clone() => Clone();
+
+    public Value Clone() => new(Display);
+
+    public bool Equals(Value other) 
+        => other != null && Display == other.Display;
+    
+    public override bool Equals(object obj) 
+        => obj is Value other && Equals(other);
+    
+    public override int GetHashCode() 
+        => Display.GetHashCode();
+    
+    public override string ToString() => Display;
 
     public string Display
     {
-        get => this.display;
+        get => _display;
         set
         {
             value = ValueHelpers.FixStringInput(value);
-            if (this.display != value)
+
+            if (_display != value)
             {
-                this.display = value;
-                this.OnPropertyChanged(nameof(this.Display));
-                this.OnPropertyChanged(nameof(this.Number));
+                _display = value;
+
+                OnPropertyChanged(nameof(Display));
+                OnPropertyChanged(nameof(Number));
             }
         }
     }
 
     public decimal Number
     {
-        get => ValueHelpers.ToNumber(this.Display);
-        set => this.Display = ValueHelpers.ToString(value);
+        get => ValueHelpers.ToNumber(Display);
+        set => Display = ValueHelpers.ToString(value);
     }
 }

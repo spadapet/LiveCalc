@@ -9,7 +9,11 @@ internal static class ValueHelpers
 
     public static decimal ToNumber(string value)
     {
-        if (decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal result))
+        if (decimal.TryParse(
+            value, 
+            NumberStyles.Number, 
+            CultureInfo.InvariantCulture, 
+            out decimal result))
         {
             return result;
         }
@@ -17,13 +21,8 @@ internal static class ValueHelpers
         return 0m;
     }
 
-    public static string ToString(decimal value)
-    {
-        return value.ToString(CultureInfo.InvariantCulture);
-    }
-
     /// <summary>
-    /// Always returns a valid string representation of a number, given any number-like input.
+    ///  Always returns a valid string representation of a number, given any number-like input.
     /// </summary>
     public static string FixStringInput(string value)
     {
@@ -37,6 +36,7 @@ internal static class ValueHelpers
         for (int i = 0; i < value.Length; i++)
         {
             char c = value[i];
+
             switch (c)
             {
                 case '0':
@@ -84,7 +84,8 @@ internal static class ValueHelpers
 
         if (sb.Length == 0)
         {
-            sb.Append(ValueHelpers.DefaultDisplay);
+            // Nit-picked quicker... :-)
+            sb.Append(DefaultDisplay[0]);
         }
 
         value = $"{(sawNegative && sawNumber ? "-" : "")}{sb}";
@@ -92,39 +93,34 @@ internal static class ValueHelpers
         return value;
     }
 
-    public static string ToString(Value value, Command command) => command switch
+    public static string ToString(decimal value)
+        => value.ToString(CultureInfo.InvariantCulture);
+
+    public static string ToString(Value value, CalculatorCommand command) 
+        => command switch
     {
-        Command.Plus => $"{value} +",
-        Command.Minus => $"{value} -",
-        Command.Multiply => $"{value} ×",
-        Command.Divide => $"{value} ÷",
+        CalculatorCommand.Plus => $"{value} +",
+        CalculatorCommand.Minus => $"{value} -",
+        CalculatorCommand.Multiply => $"{value} ×",
+        CalculatorCommand.Divide => $"{value} ÷",
         _ => string.Empty
     };
 
     /// <summary>
-    /// Returns null if the operation cannot be computed (e.g., divide by zero).
+    ///  Returns null if the operation cannot be computed (e.g., divide by zero).
     /// </summary>
-    public static Value Compute(Value left, Command command, Value right)
+    public static Value Compute(Value left, CalculatorCommand command, Value right)
     {
         try
         {
-            switch (command)
+            return command switch
             {
-                case Command.Plus:
-                    return new Value(left.Number + right.Number);
-
-                case Command.Minus:
-                    return new Value(left.Number - right.Number);
-
-                case Command.Multiply:
-                    return new Value(left.Number * right.Number);
-
-                case Command.Divide:
-                    return new Value(left.Number / right.Number);
-
-                default:
-                    return null;
-            }
+                CalculatorCommand.Plus => new Value(left.Number + right.Number),
+                CalculatorCommand.Minus => new Value(left.Number - right.Number),
+                CalculatorCommand.Multiply => new Value(left.Number * right.Number),
+                CalculatorCommand.Divide => new Value(left.Number / right.Number),
+                _ => null,
+            };
         }
         catch
         {
