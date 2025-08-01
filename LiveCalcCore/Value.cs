@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Globalization;
 
 namespace CalcCore;
@@ -6,7 +7,7 @@ namespace CalcCore;
 /// <summary>
 ///  Store all values as strings, to allow for arbitrary precision and formatting.
 /// </summary>
-public partial class Value : ObservableObject
+public partial class Value : ObservableObject, ICloneable
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Number))]
@@ -55,6 +56,8 @@ public partial class Value : ObservableObject
 
     public Value Clone()
         => new(Display);
+
+    object ICloneable.Clone() => new Value(Display);
 
     public static implicit operator string(Value value) 
         => value.Display;
