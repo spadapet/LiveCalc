@@ -1,54 +1,81 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
+using System.Globalization;
 
 namespace CalcCore;
 
 /// <summary>
-/// Store all values as strings, to allow for arbitrary precision and formatting.
+///  Store all values as strings, to allow for arbitrary precision and formatting.
 /// </summary>
-public class Value : ObservableObject, IEquatable<Value>, ICloneable
+public partial class Value : ObservableObject, ICloneable
 {
-    private string display;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Number))]
+    private string _display;
 
     public Value()
-        : this(ValueHelpers.DefaultDisplay)
+        : this(ValueExtensions.DefaultDisplay)
     {}
 
     public Value(string value)
     {
-        this.display = ValueHelpers.FixStringInput(value);
+        _display = value.FixStringInput();
     }
 
     public Value(decimal number)
     {
-        this.display = ValueHelpers.ToString(number);
+        _display = number.ToString();
     }
 
-    object ICloneable.Clone() => this.Clone();
-    public Value Clone() => new(this.Display);
-    public bool Equals(Value other) => other != null && this.Display == other.Display;
-    public override bool Equals(object obj) => obj is Value other && this.Equals(other);
-    public override int GetHashCode() => this.Display.GetHashCode();
-    public override string ToString() => this.Display;
-
-    public string Display
+    partial void OnDisplayChanged(string? oldValue, string newValue)
     {
-        get => this.display;
-        set
-        {
-            value = ValueHelpers.FixStringInput(value);
-            if (this.display != value)
-            {
-                this.display = value;
-                this.OnPropertyChanged(nameof(this.Display));
-                this.OnPropertyChanged(nameof(this.Number));
-            }
-        }
+        _display = newValue.FixStringInput();
     }
 
     public decimal Number
     {
-        get => ValueHelpers.ToNumber(this.Display);
-        set => this.Display = ValueHelpers.ToString(value);
+        get => this;
+        set => Display = value.ToString();
     }
+
+    public override string ToString() 
+        => Display;
+
+    public string ToString(CalculatorCommand command)
+        => command switch
+        {
+            CalculatorCommand.Plus => $"{this} +",
+            CalculatorCommand.Minus => $"{this} -",
+            CalculatorCommand.Multiply => $"{this} ×",
+            CalculatorCommand.Divide => $"{this} ÷",
+            _ => string.Empty
+        };
+
+    public void Add(string v)
+        => Display += v.FixStringInput();
+
+    public Value Clone()
+        => new(Display);
+
+    object ICloneable.Clone() => new Value(Display);
+
+    public static implicit operator string(Value value) 
+        => value.Display;
+
+    public static implicit operator decimal(Value value)
+    {
+        if (decimal.TryParse(
+            value,
+            NumberStyles.Number,
+            CultureInfo.InvariantCulture,
+            out decimal result))
+        {
+            return result;
+        }
+
+        return 0m;
+    }
+
+    public static implicit operator double(Value value)
+        => (double)(decimal)value;
 }

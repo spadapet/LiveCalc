@@ -1,32 +1,32 @@
 ﻿namespace CalcCore;
 
-public enum Command
+public enum CalculatorCommand
 {
     None,
 
-    // Typing
-    Type0,
-    Type1,
-    Type2,
-    Type3,
-    Type4,
-    Type5,
-    Type6,
-    Type7,
-    Type8,
-    Type9,
+    // Number input Commands
+    Digit0,
+    Digit1,
+    Digit2,
+    Digit3,
+    Digit4,
+    Digit5,
+    Digit6,
+    Digit7,
+    Digit8,
+    Digit9,
     DecimalPoint,
     Backspace,
     ClearAll,
     ClearEntry,
 
-    // Binary operations
+    // Binary operation Commands
     Plus,
     Minus,
     Multiply,
     Divide,
 
-    // Unary operations
+    // Unary operation Commands
     Equal,
     PlusMinus,
     Percent,
@@ -34,10 +34,10 @@ public enum Command
     Square,
     Inverse,
 
-    // Constants
+    // Math Constants Command
     ConstantPi,
 
-    // Memory operations
+    // Memory operations Commands
     MemoryClear,
     MemoryRecall,
     MemoryAdd,
