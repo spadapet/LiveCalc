@@ -9,14 +9,15 @@ public partial class CalculatorViewModel : ObservableObject
     [ObservableProperty]
     private CalculatorCommand _pushedCommand = CalculatorCommand.None;
 
+    [NotifyPropertyChangedFor(nameof(Formula))]
+    [ObservableProperty]
+    public Value _pushedValue = new();
+
     [ObservableProperty]
     private Value _displayValue = new();
 
     [ObservableProperty]
     private Value _memoryValue = new();
-
-    [ObservableProperty]
-    public Value _pushedValue = new();
 
     public string Formula 
         => PushedCommand.ToString(PushedValue);
@@ -75,7 +76,6 @@ public partial class CalculatorViewModel : ObservableObject
                 {
                     DisplayValue.Display = DisplayValue.Display[..(DisplayValue.Display.Length - 1)];
                 }
-
                 break;
 
             case CalculatorCommand.ClearAll:
@@ -95,9 +95,7 @@ public partial class CalculatorViewModel : ObservableObject
             case CalculatorCommand.Divide:
                 PushedValue.Display = DisplayValue.Display;
                 PushedCommand = command;
-                OnPropertyChanged(nameof(Formula));
                 DisplayValue.Display = ValueExtensions.DefaultDisplay;
-
                 break;
 
             case CalculatorCommand.Equal:
@@ -107,7 +105,6 @@ public partial class CalculatorViewModel : ObservableObject
                     PushedCommand = CalculatorCommand.None;
                     DisplayValue.Display = result;
                 }
-
                 break;
 
             case CalculatorCommand.PlusMinus:
