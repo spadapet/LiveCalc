@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 
 namespace CalcCore;
@@ -34,7 +33,7 @@ public partial class Value : ObservableObject
 
     public decimal Number
     {
-        get => ToNumber(Display);
+        get => this;
         set => Display = value.ToString();
     }
 
@@ -51,7 +50,16 @@ public partial class Value : ObservableObject
             _ => string.Empty
         };
 
-    private static decimal ToNumber(string value)
+    public void Add(string v)
+        => Display += v.FixStringInput();
+
+    public Value Clone()
+        => new(Display);
+
+    public static implicit operator string(Value value) 
+        => value.Display;
+
+    public static implicit operator decimal(Value value)
     {
         if (decimal.TryParse(
             value,
@@ -64,4 +72,7 @@ public partial class Value : ObservableObject
 
         return 0m;
     }
+
+    public static implicit operator double(Value value)
+        => (double)(decimal)value;
 }

@@ -1,52 +1,25 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.ComponentModel;
 
 namespace CalcCore;
 
-public record PropertyCascadeMessage(object Source, string PropertyName, object? NewValue);
-
 public partial class CalculatorViewModel : ObservableObject
 {
-    private readonly Value _currentValue = new();
-    private readonly Value _memoryValue = new();
-    private readonly Value _pushedValue = new();
-
+    [NotifyPropertyChangedFor(nameof(Formula))]
+    [ObservableProperty]
     private CalculatorCommand _pushedCommand = CalculatorCommand.None;
 
-    public CalculatorViewModel()
-    {
-        _currentValue.PropertyChanged += OnValuePropertyChanged;
-        _memoryValue.PropertyChanged += OnValuePropertyChanged;
-        _pushedValue.PropertyChanged += OnValuePropertyChanged;
-    }
+    [ObservableProperty]
+    private Value _displayValue = new();
 
-    public string Display
-    {
-        get => _currentValue.Display;
-        set => _currentValue.Display = value;
-    }
+    [ObservableProperty]
+    private Value _memoryValue = new();
 
-    public string MemoryDisplay
-    {
-        get => _memoryValue.Display;
-        set => _memoryValue.Display = value;
-    }
-
-    public decimal Number
-    {
-        get => _currentValue.Number;
-        set => _currentValue.Number = value;
-    }
-
-    public decimal MemoryNumber
-    {
-        get => _memoryValue.Number;
-        set => _memoryValue.Number = value;
-    }
+    [ObservableProperty]
+    public Value _pushedValue = new();
 
     public string Formula 
-        => _pushedCommand.ToString(_pushedValue);
+        => PushedCommand.ToString(PushedValue);
 
     [RelayCommand]
     private void Execute(CalculatorCommand command)
@@ -54,161 +27,141 @@ public partial class CalculatorViewModel : ObservableObject
         switch (command)
         {
             case CalculatorCommand.Digit0:
-                Display += "0";
+                DisplayValue.Add("0");
                 break;
 
             case CalculatorCommand.Digit1:
-                Display += "1";
+                DisplayValue.Add("1");
                 break;
 
             case CalculatorCommand.Digit2:
-                Display += "2";
+                DisplayValue.Add("2");
                 break;
 
             case CalculatorCommand.Digit3:
-                Display += "3";
+                DisplayValue.Add("3");
                 break;
 
             case CalculatorCommand.Digit4:
-                Display += "4";
+                DisplayValue.Add("4");
                 break;
 
             case CalculatorCommand.Digit5:
-                Display += "5";
+                DisplayValue.Add("5");
                 break;
 
             case CalculatorCommand.Digit6:
-                Display += "6";
+                DisplayValue.Add("6");
                 break;
 
             case CalculatorCommand.Digit7:
-                Display += "7";
+                DisplayValue.Add("7");
                 break;
 
             case CalculatorCommand.Digit8:
-                Display += "8";
+                DisplayValue.Add("8");
                 break;
 
             case CalculatorCommand.Digit9:
-                Display += "9";
+                DisplayValue.Add("9");
                 break;
 
             case CalculatorCommand.DecimalPoint:
-                Display += ".";
+                DisplayValue.Add(".");
                 break;
 
             case CalculatorCommand.Backspace:
-                if (Display.Length > 0)
+                if (DisplayValue.Display.Length > 0)
                 {
-                    Display = Display[..(Display.Length - 1)];
+                    DisplayValue.Display = DisplayValue.Display[..(DisplayValue.Display.Length - 1)];
                 }
 
                 break;
 
             case CalculatorCommand.ClearAll:
             case CalculatorCommand.ClearEntry:
-                if (command == CalculatorCommand.ClearAll || Display == ValueExtensions.DefaultDisplay)
+                if (command == CalculatorCommand.ClearAll || DisplayValue == ValueExtensions.DefaultDisplay)
                 {
-                    _pushedValue.Display = ValueExtensions.DefaultDisplay;
-                    _pushedCommand = CalculatorCommand.None;
-                    OnPropertyChanged(nameof(Formula));
+                    PushedValue.Display = ValueExtensions.DefaultDisplay;
+                    PushedCommand = CalculatorCommand.None;
                 }
                 
-                Display = ValueExtensions.DefaultDisplay;
+                DisplayValue.Display = ValueExtensions.DefaultDisplay;
                 break;
 
             case CalculatorCommand.Plus:
             case CalculatorCommand.Minus:
             case CalculatorCommand.Multiply:
             case CalculatorCommand.Divide:
-                _pushedValue.Display = _currentValue.Display;
-                _pushedCommand = command;
+                PushedValue.Display = DisplayValue.Display;
+                PushedCommand = command;
                 OnPropertyChanged(nameof(Formula));
-                Display = ValueExtensions.DefaultDisplay;
+                DisplayValue.Display = ValueExtensions.DefaultDisplay;
 
                 break;
 
             case CalculatorCommand.Equal:
-                if (_pushedCommand.Compute(_pushedValue, _currentValue) is Value result)
+                if (PushedCommand.Compute(PushedValue, DisplayValue) is Value result)
                 {
-                    _pushedValue.Display = ValueExtensions.DefaultDisplay;
-                    _pushedCommand = CalculatorCommand.None;
-                    OnPropertyChanged(nameof(Formula));
-                    Display = result.Display;
+                    PushedValue.Display = ValueExtensions.DefaultDisplay;
+                    PushedCommand = CalculatorCommand.None;
+                    DisplayValue.Display = result;
                 }
 
                 break;
 
             case CalculatorCommand.PlusMinus:
-                if (Display.StartsWith('-'))
+                if (DisplayValue.Display.StartsWith('-'))
                 {
-                    Display = Display[1..];
+                    DisplayValue.Display = DisplayValue.Display[1..];
                 }
                 else
                 {
-                    Display = $"-{Display}";
+                    DisplayValue.Display = $"-{DisplayValue}";
                 }
                 break;
 
             case CalculatorCommand.Percent:
-                Number *= 0.01m;
+                DisplayValue.Number *= 0.01m;
                 break;
 
             case CalculatorCommand.SquareRoot:
-                Number = Number > 0m
-                    ? (decimal)Math.Sqrt((double)Number)
+                DisplayValue.Number = DisplayValue > 0m
+                    ? (decimal)Math.Sqrt(DisplayValue)
                     : 0m;
                 break;
 
             case CalculatorCommand.Square:
-                Number *= Number;
+                DisplayValue.Number *= DisplayValue;
                 break;
 
             case CalculatorCommand.Inverse:
-                Number = Number != 0m ? 1m / Number : 0m;
+                DisplayValue.Number = DisplayValue != 0m ? 1m / DisplayValue : 0m;
                 break;
 
             case CalculatorCommand.ConstantPi:
-                Number = (decimal)Math.PI;
+                DisplayValue.Number = (decimal)Math.PI;
                 break;
 
             case CalculatorCommand.MemoryClear:
-                MemoryDisplay = ValueExtensions.DefaultDisplay;
+                MemoryValue.Display = ValueExtensions.DefaultDisplay;
                 break;
 
             case CalculatorCommand.MemoryRecall:
-                Display = MemoryDisplay;
+                DisplayValue = MemoryValue.Clone();
                 break;
 
             case CalculatorCommand.MemoryAdd:
-                MemoryNumber += Number;
+                MemoryValue.Number += DisplayValue;
                 break;
 
             case CalculatorCommand.MemorySubtract:
-                MemoryNumber -= Number;
+                MemoryValue.Number -= DisplayValue;
                 break;
 
             case CalculatorCommand.MemoryStore:
-                MemoryDisplay = Display;
+                MemoryValue = DisplayValue.Clone();
                 break;
-        }
-    }
-
-    private void OnValuePropertyChanged(object? sender, PropertyChangedEventArgs args)
-    {
-        if (sender == _currentValue)
-        {
-            OnPropertyChanged(nameof(Display));
-            OnPropertyChanged(nameof(Number));
-        }
-        else if (sender == _memoryValue)
-        {
-            OnPropertyChanged(nameof(MemoryDisplay));
-            OnPropertyChanged(nameof(MemoryNumber));
-        }
-        else if (sender == _pushedValue)
-        {
-            OnPropertyChanged(nameof(Formula));
         }
     }
 }

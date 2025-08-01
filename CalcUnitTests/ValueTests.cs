@@ -96,10 +96,10 @@ public class ValueTests
     public void Number_Set_ShouldUpdateDisplay(decimal input, string expected)
     {
         // Arrange
-        var value = new Value();
-
-        // Act
-        value.Number = input;
+        Value value = new()
+        {
+            Number = input
+        };
 
         // Assert
         Assert.Equal(expected, value.Display);
