@@ -19,8 +19,7 @@ public partial class CalculatorViewModel : ObservableObject
     [ObservableProperty]
     private Value _memoryValue = new();
 
-    public string Formula 
-        => PushedCommand.ToString(PushedValue);
+    public string Formula => PushedValue.ToString(PushedCommand);
 
     [RelayCommand]
     private void Execute(CalculatorCommand command)
@@ -85,7 +84,7 @@ public partial class CalculatorViewModel : ObservableObject
                     PushedValue.Display = ValueExtensions.DefaultDisplay;
                     PushedCommand = CalculatorCommand.None;
                 }
-                
+
                 DisplayValue.Display = ValueExtensions.DefaultDisplay;
                 break;
 

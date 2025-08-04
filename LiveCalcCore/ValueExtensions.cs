@@ -87,22 +87,6 @@ internal static class ValueExtensions
     }
 
     /// <summary>
-    ///  Converts a calculator command and value to a string representation.
-    /// </summary>
-    /// <param name="command">The calculator command.</param>
-    /// <param name="value">The value to display.</param>
-    /// <returns>A string representing the command and value.</returns>
-    public static string ToString(this CalculatorCommand command, Value value)
-         => command switch
-         {
-             CalculatorCommand.Plus => $"{value} +",
-             CalculatorCommand.Minus => $"{value} -",
-             CalculatorCommand.Multiply => $"{value} ×",
-             CalculatorCommand.Divide => $"{value} ÷",
-             _ => string.Empty
-         };
-
-    /// <summary>
     ///  Computes the result of a binary calculator command on two values, or returns null if invalid.
     /// </summary>
     /// <param name="command">The calculator command.</param>
