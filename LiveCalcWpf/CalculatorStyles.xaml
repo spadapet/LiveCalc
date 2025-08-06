@@ -1,21 +1,36 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="CalcButtonNormalColor">#1A237E</SolidColorBrush>
+    <SolidColorBrush x:Key="CalcButtonHoverColor">#283593</SolidColorBrush>
+    <SolidColorBrush x:Key="CalcButtonPressedColor">#0D133D</SolidColorBrush>
+    <SolidColorBrush x:Key="CalcButtonBorderColor">#3949AB</SolidColorBrush>
     <Style x:Key="CalcButtonStyle" TargetType="Button">
         <Setter Property="Margin" Value="5"/>
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Background" Value="#333"/>
-        <Setter Property="BorderBrush" Value="#444"/>
-        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="{StaticResource CalcButtonNormalColor}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource CalcButtonBorderColor}"/>
+        <Setter Property="BorderThickness" Value="2"/>
         <Setter Property="Height" Value="50"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource CalcButtonHoverColor}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource CalcButtonPressedColor}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

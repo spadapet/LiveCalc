@@ -4,8 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:CalcWpf"
+             xmlns:core="clr-namespace:CalcCore;assembly=CalcCore"
+             d:DataContext="{d:DesignInstance Type=core:CalculatorViewModel, IsDesignTimeCreatable=True}"
              mc:Ignorable="d"
              d:DesignHeight="565" d:DesignWidth="350">
+    <UserControl.Resources>
+        <local:FormulaToEnabledConverter x:Key="FormulaToEnabledConverter" />
+    </UserControl.Resources>
     <Grid Background="#222" Margin="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -13,9 +18,9 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <!-- Header -->
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="10,10,10,0">
-            <TextBlock Text="Standard" FontSize="22" Foreground="White" FontWeight="SemiBold"/>
-        </StackPanel>
+        <Grid Grid.Row="0" Margin="10,10,10,0">
+            <TextBlock Text="{Binding Formula}" d:Text="42 +" FontSize="22" Foreground="White" FontWeight="SemiBold" HorizontalAlignment="Right" />
+        </Grid>
         <!-- Display -->
         <Border Grid.Row="1" Margin="10,10,10,10" BorderBrush="White" BorderThickness="2" CornerRadius="4">
             <TextBlock Text="{Binding DisplayValue.Display}" FontSize="48" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="10,0,10,0" Height="70"/>
@@ -23,6 +28,7 @@
         <!-- Buttons -->
         <Grid Grid.Row="2" Margin="0,0,0,0">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -38,41 +44,45 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <!-- Memory row -->
-            <Button Grid.Row="0" Grid.Column="0" Content="MC" Command="{Binding ExecuteCommand}" CommandParameter="MemoryClear" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="0" Grid.Column="1" Content="MR" Command="{Binding ExecuteCommand}" CommandParameter="MemoryRecall" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="0" Grid.Column="2" Content="M+" Command="{Binding ExecuteCommand}" CommandParameter="MemoryAdd" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="0" Grid.Column="3" Content="M-" Command="{Binding ExecuteCommand}" CommandParameter="MemorySubtract" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="1" Grid.ColumnSpan="4" Grid.Column="0" Content="MS" Command="{Binding ExecuteCommand}" CommandParameter="MemoryStore" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonMemoryClear" Grid.Row="0" Grid.Column="0" Content="MC" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.MemoryClear}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonMemoryRecall" Grid.Row="0" Grid.Column="1" Content="MR" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.MemoryRecall}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonMemoryAdd" Grid.Row="0" Grid.Column="2" Content="M+" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.MemoryAdd}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonMemorySubtract" Grid.Row="0" Grid.Column="3" Content="M-" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.MemorySubtract}" Style="{StaticResource CalcButtonStyle}"/>
+            <!--<Button x:Name="ButtonMemoryStore" Grid.Row="1" Grid.Column="4" Content="MS" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.MemoryStore}" Style="{StaticResource CalcButtonStyle}"/>-->
             <!-- Row 1 -->
-            <Button Grid.Row="2" Grid.Column="0" Content="%" Command="{Binding ExecuteCommand}" CommandParameter="Percent" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="2" Grid.Column="1" Content="CE" Command="{Binding ExecuteCommand}" CommandParameter="ClearEntry" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="2" Grid.Column="2" Content="C" Command="{Binding ExecuteCommand}" CommandParameter="ClearAll" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="2" Grid.Column="3" Content="Back" Command="{Binding ExecuteCommand}" CommandParameter="Backspace" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonPercent" Grid.Row="2" Grid.Column="0" Content="%" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Percent}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonClearEntry" Grid.Row="2" Grid.Column="1" Content="CE" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.ClearEntry}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonClearAll" Grid.Row="2" Grid.Column="2" Content="C" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.ClearAll}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonBackspace" Grid.Row="2" Grid.Column="3" Content="Back" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Backspace}" Style="{StaticResource CalcButtonStyle}"/>
             <!-- Row 2 -->
-            <Button Grid.Row="3" Grid.Column="0" Content="1/x" Command="{Binding ExecuteCommand}" CommandParameter="Inverse" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="3" Grid.Column="1" Content="x^2" Command="{Binding ExecuteCommand}" CommandParameter="Square" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="3" Grid.Column="2" Content="sqrt" Command="{Binding ExecuteCommand}" CommandParameter="SquareRoot" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="3" Grid.Column="3" Content="/" Command="{Binding ExecuteCommand}" CommandParameter="Divide" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonInverse" Grid.Row="3" Grid.Column="0" Content="1/x" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Inverse}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonSquare" Grid.Row="3" Grid.Column="1" Content="x^2" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Square}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonSquareRoot" Grid.Row="3" Grid.Column="2" Content="sqrt" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.SquareRoot}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonDivide" Grid.Row="3" Grid.Column="3" Content="/" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Divide}" Style="{StaticResource CalcButtonStyle}"
+                    IsEnabled="{Binding Formula, Converter={StaticResource FormulaToEnabledConverter}}"/>
             <!-- Row 3 -->
-            <Button Grid.Row="4" Grid.Column="0" Content="7" Command="{Binding ExecuteCommand}" CommandParameter="Digit7" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="4" Grid.Column="1" Content="8" Command="{Binding ExecuteCommand}" CommandParameter="Digit8" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="4" Grid.Column="2" Content="9" Command="{Binding ExecuteCommand}" CommandParameter="Digit9" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="4" Grid.Column="3" Content="*" Command="{Binding ExecuteCommand}" CommandParameter="Multiply" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonDigit7" Grid.Row="4" Grid.Column="0" Content="7" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Digit7}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonDigit8" Grid.Row="4" Grid.Column="1" Content="8" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Digit8}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonDigit9" Grid.Row="4" Grid.Column="2" Content="9" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Digit9}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonMultiply" Grid.Row="4" Grid.Column="3" Content="*" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Multiply}" Style="{StaticResource CalcButtonStyle}"
+                    IsEnabled="{Binding Formula, Converter={StaticResource FormulaToEnabledConverter}}"/>
             <!-- Row 4 -->
-            <Button Grid.Row="5" Grid.Column="0" Content="4" Command="{Binding ExecuteCommand}" CommandParameter="Digit4" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="5" Grid.Column="1" Content="5" Command="{Binding ExecuteCommand}" CommandParameter="Digit5" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="5" Grid.Column="2" Content="6" Command="{Binding ExecuteCommand}" CommandParameter="Digit6" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="5" Grid.Column="3" Content="-" Command="{Binding ExecuteCommand}" CommandParameter="Minus" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonDigit4" Grid.Row="5" Grid.Column="0" Content="4" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Digit4}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonDigit5" Grid.Row="5" Grid.Column="1" Content="5" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Digit5}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonDigit6" Grid.Row="5" Grid.Column="2" Content="6" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Digit6}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonMinus" Grid.Row="5" Grid.Column="3" Content="-" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Minus}" Style="{StaticResource CalcButtonStyle}"
+                    IsEnabled="{Binding Formula, Converter={StaticResource FormulaToEnabledConverter}}"/>
             <!-- Row 5 -->
-            <Button Grid.Row="6" Grid.Column="0" Content="1" Command="{Binding ExecuteCommand}" CommandParameter="Digit1" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="6" Grid.Column="1" Content="2" Command="{Binding ExecuteCommand}" CommandParameter="Digit2" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="6" Grid.Column="2" Content="3" Command="{Binding ExecuteCommand}" CommandParameter="Digit3" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="6" Grid.Column="3" Content="+" Command="{Binding ExecuteCommand}" CommandParameter="Plus" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonDigit1" Grid.Row="6" Grid.Column="0" Content="1" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Digit1}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonDigit2" Grid.Row="6" Grid.Column="1" Content="2" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Digit2}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonDigit3" Grid.Row="6" Grid.Column="2" Content="3" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Digit3}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonPlus" Grid.Row="6" Grid.Column="3" Content="+" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Plus}" Style="{StaticResource CalcButtonStyle}"
+                    IsEnabled="{Binding Formula, Converter={StaticResource FormulaToEnabledConverter}}"/>
             <!-- Row 6 -->
-            <Button Grid.Row="7" Grid.Column="0" Content="+/-" Command="{Binding ExecuteCommand}" CommandParameter="PlusMinus" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="7" Grid.Column="1" Content="0" Command="{Binding ExecuteCommand}" CommandParameter="Digit0" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="7" Grid.Column="2" Content="." Command="{Binding ExecuteCommand}" CommandParameter="DecimalPoint" Style="{StaticResource CalcButtonStyle}"/>
-            <Button Grid.Row="7" Grid.Column="3" Content="=" Command="{Binding ExecuteCommand}" CommandParameter="Equal" Style="{StaticResource CalcButtonStyle}" Background="#3af" Foreground="Black"/>
+            <Button x:Name="ButtonPlusMinus" Grid.Row="7" Grid.Column="0" Content="+/-" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.PlusMinus}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonDigit0" Grid.Row="7" Grid.Column="1" Content="0" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Digit0}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonDecimalPoint" Grid.Row="7" Grid.Column="2" Content="." Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.DecimalPoint}" Style="{StaticResource CalcButtonStyle}"/>
+            <Button x:Name="ButtonEqual" Grid.Row="7" Grid.Column="3" Content="=" Command="{Binding ExecuteCommand}" CommandParameter="{x:Static core:CalculatorCommand.Equal}" Style="{StaticResource CalcButtonStyle}" Background="#3af" Foreground="Black"/>
         </Grid>
     </Grid>
 </UserControl>
