@@ -1,0 +1,20 @@
+﻿[*.cs]
+
+# CA1834: Consider using 'StringBuilder.Append(char)' when applicable
+dotnet_diagnostic.CA1834.severity = silent
+
+# WFO5001: Type is for evaluation purposes only...
+dotnet_diagnostic.WFO5001.severity = silent
+
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Settings for specific file types
+[*.{csproj,vbproj,props,targets,config}]
+indent_style = space
+indent_size = 2
+
+# IDE0130: Namespace does not match folder structure
+dotnet_style_namespace_match_folder = false

@@ -1,10 +1,9 @@
-namespace CalcWinForms
+namespace CalcWinForms;
+
+public partial class MainForm : Form
 {
-    public partial class MainForm : Form
+    public MainForm()
     {
-        public MainForm()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }
