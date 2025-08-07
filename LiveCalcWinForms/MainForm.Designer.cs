@@ -13,6 +13,7 @@ partial class MainForm : IServiceProvider
     private readonly IUserSettingsService _userSettingsService = null;
     private readonly IServiceProvider _serviceProvider = null;
 
+
     /// <summary>
     ///  Initializes a new instance of the <see cref="MainForm"/> class with dependency injection support.
     /// </summary>
@@ -92,10 +93,15 @@ partial class MainForm : IServiceProvider
     /// </summary>
     private void InitializeComponent()
     {
-        components = new System.ComponentModel.Container();
+        SuspendLayout();
+        // 
+        // MainForm
+        // 
+        AutoScaleDimensions = new SizeF(13F, 32F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(800, 450);
-        Text = "Form1";
+        ClientSize = new Size(702, 672);
+        Name = "MainForm";
+        ResumeLayout(false);
     }
 
     #endregion

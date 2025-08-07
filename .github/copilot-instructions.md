@@ -8,7 +8,7 @@ Follow these rules when writing code:
 
 # WinForms Agent Development Guidelines
 
-## Core Requirements
+## Windows Forms Core Requirements
 
 ### Form/UserControl Creation
 
@@ -42,11 +42,20 @@ Follow these rules when writing code:
 - Property assignments
 - Layout method calls (`SuspendLayout`, `ResumeLayout`, `BeginInit`, `EndInit`)
 
-**Never include:**
+**Never include in the WinForms Designer code-behind file:**
 
-- Lambda expressions, local Functions, `nameof`
-- Complex logic or calculations (No `If`/`then`/`else`, no loops or other program flow statements)
-- Method calls can be permitted, but only survive round-trips if supported (or known to be generated) by specific CodeDOMSerializers.
+- Lambda expressions or local Functions 
+- `nameof()`
+- Complex logic or calculations
+- `for { }` or `foreach { }` loops
+- `If`/`then`/`else`
+- Ternary operators (`? :`)
+- `Select Case` statements
+- `switch` expressions
+- New methods or properties in the Designer file.
+  If you need to do this for control initialization or styling purposes, do it in the constructor of the main code file after the call to `InitializeComponent()` call. Create a separate method for that kind of initialization!
+
+IMPORTANT: If you need to use any of the above, rather create a separate method in the **main code file** of the Form or the UserControl and call it from inside of the Constructor _after_  calling `InitializeComponent`.
 
 ### Control Naming Standards
 
