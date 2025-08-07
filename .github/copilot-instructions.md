@@ -8,6 +8,8 @@ Follow these rules when writing code:
 
 # WinForms Agent Development Guidelines
 
+Please use the instructions in this chapter EXCLUSIVELY for WinForms Agent development.
+
 ## Windows Forms Core Requirements
 
 ### Form/UserControl Creation
