@@ -18,4 +18,8 @@
     <ProjectReference Include="..\LiveCalcCore\CalcCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
 </Project>
