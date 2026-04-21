@@ -21,6 +21,7 @@ public class SkyColorSkillTests
     [Theory]
     [InlineData("What color is grass?")]
     [InlineData("Show me skyline color palettes.")]
+    [InlineData("This keyboard is the skylight model.")]
     [InlineData("Do whisky colorants change taste?")]
     [InlineData("How's the weather today?")]
     [InlineData("")]
