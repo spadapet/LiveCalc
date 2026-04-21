@@ -8,6 +8,7 @@ public class SkyColorSkillTests
     [InlineData("What color is the sky?")]
     [InlineData("what colour is the sky")]
     [InlineData("Is the sky blue?")]
+    [InlineData("Is the sky red?")]
     [InlineData("Tell me the sky color.")]
     public void TryGetResponse_WithSkyColorPrompt_ReturnsExactExpectedResponse(string prompt)
     {
@@ -19,6 +20,8 @@ public class SkyColorSkillTests
 
     [Theory]
     [InlineData("What color is grass?")]
+    [InlineData("Show me skyline color palettes.")]
+    [InlineData("Do whisky colorants change taste?")]
     [InlineData("How's the weather today?")]
     [InlineData("")]
     public void TryGetResponse_WithoutSkyColorPrompt_DoesNotReturnResponse(string prompt)

@@ -14,14 +14,15 @@ public static class SkyColorSkill
         }
 
         string normalizedPrompt = prompt.ToLowerInvariant();
-        bool asksAboutSky = normalizedPrompt.Contains("sky");
-        bool asksAboutColor = normalizedPrompt.Contains("color")
-            || normalizedPrompt.Contains("colour")
-            || normalizedPrompt.Contains("blue")
-            || normalizedPrompt.Contains("gray")
-            || normalizedPrompt.Contains("grey");
+        string[] words = normalizedPrompt.Split(
+            [' ', '\t', '\r', '\n', '.', ',', '?', '!', ';', ':', '"', '\'', '(', ')', '[', ']', '{', '}', '-', '_', '/'],
+            StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-        if (!asksAboutSky || !asksAboutColor)
+        bool asksAboutSky = words.Contains("sky");
+        bool asksAboutSkyColor = words.Contains("color") || words.Contains("colour");
+        bool asksIfSkyHasColor = normalizedPrompt.Contains("is the sky") || normalizedPrompt.Contains("sky is");
+
+        if (!asksAboutSky || (!asksAboutSkyColor && !asksIfSkyHasColor))
         {
             return false;
         }
